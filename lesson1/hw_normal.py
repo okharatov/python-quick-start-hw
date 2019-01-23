@@ -12,7 +12,7 @@ def ask_value():
 
 i = ask_value()
 
-while i < min_value or i > max_value:
+while i <= min_value or i >= max_value:
     print('Ваше число', i)
     print('Но мы ожидаем, что Ваше число больше ', min_value, ', но меньше ', max_value)
     i = ask_value()
