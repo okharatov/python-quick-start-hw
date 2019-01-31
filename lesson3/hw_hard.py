@@ -10,6 +10,23 @@
 # функция должна получить параметр damage атакующего и отнять это количество
 # health от атакуемого. Функция должна сама работать с словарями и изменять их значения.
 
+def attack(person1, person2):
+    person2['health'] -= person1['damage']
+
+person = {
+    'name': 'New Name',
+    'health': 100,
+    'damage': 50
+}
+
+player = person.copy()
+enemy = person.copy()
+
+player['name'] = input('Укажите имя игрока ')
+enemy['name'] =input('Укажите имя врага ')
+
+attack(player, enemy)
+print(enemy)
 
 # Задание - 2
 # Давайте усложним предыдущее задание, измените сущности, добавив новый параметр - armor = 1.2
