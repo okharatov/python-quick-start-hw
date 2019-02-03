@@ -6,8 +6,10 @@
 #
 # Ваша задача исправить ошибки логики, и выполнить проверки данных, которые вводит пользователь.
 # Обязательно убедитесь, что вы выполнили все проверки, попробуйте сами сломать свою программу вводя неверные данные!
+import re
+import sys
 
-person1 = {'card': 4276123465440000, 'pin': 9090, 'money': 100.90}
+person1 = {'card': 1, 'pin': 9090, 'money': 100.90}
 person2 = {'card': 4276123465440001, 'pin': 9091, 'money': 200.90}
 person3 = {'card': 4276123465440002, 'pin': 9092, 'money': 300.90}
 
@@ -31,39 +33,69 @@ def check_account(person):
 
 
 def withdraw_money(person, money):
-    if person['money'] - money == 0:
-        person['money'] -= money
-        return 'Вы сняли {} рублей.'.format(money)
+    if person['money'] - money >= 0:
+        if person['money'] > (person['money'] - money):
+            person['money'] -= money
+            return 'Вы сняли {} рублей.'.format(money)
+        else: 
+            return ('Введена невалидная сумма для снятия')
     else:
         return 'На вашем счету недостаточно средств!'
 
 
 def process_user_choice(choice, person):
-    if choice == '1':
+    if choice == 1:
         print(check_account(person))
-    elif choice == '2':
-        count = float(input('Сумма к снятию:'))
-        print(withdraw_money(person, count))
+    elif choice == 2:
+        try:
+            count = float(input('Сумма к снятию:'))
+            print(withdraw_money(person, count))
+        except:
+            print('Введена невалидная сумма для снятия')
 
+def login():
+    has_value = False
+    card_number, pin_code = '', ''
 
-def start():
-    card_number, pin_code = input('Введите номер карты и пин код через пробел:').split()
+    while not has_value:            
+        try:
+            if input('Если хотите завешить работу введите q ' +
+                'для продолжения нажмите любую клавишу') == 'q':
+                return -1, -1
+            card_number, pin_code = input('Введите номер карты и пин код через пробел ').split()
+            card_number = int(card_number)
+            pin_code = int(pin_code)
+            has_value = True
+        except:
+            print('Не верный формат пин кода или номера карты')
 
-    card_number = int(card_number)
-    pin_code = int(pin_code)
+    return card_number, pin_code
+
+def main_work(card_number, pin_code):
     person = get_person_by_card(card_number)
     if person and is_pin_valid(person, pin_code):
         while True:
-            choice = int(input('Выберите пункт:\n'
-                               '1. Проверить баланс\n'
-                               '2. Снять деньги\n'
-                               '3. Выход\n'
-                               '---------------------\n'
-                               'Ваш выбор:'))
-            if choice == 3:
-                break
-            process_user_choice(choice, person)
+            choice = input('Выберите пункт:\n'
+                            '1. Проверить баланс\n'
+                            '2. Снять деньги\n'
+                            '3. Выйти из аккаунта\n'
+                            '---------------------\n'
+                            'Ваш выбор:')
+            if re.match('[1-3]', choice):
+                choice = int(choice)
+                if choice == 3:
+                    break
+                process_user_choice(choice, person)
+            else:
+                print('Выбранная операция несуществует')
     else:
         print('Номер карты или пин код введены не верно!')
+
+def start():
+    card_number, pin_code = login()
+    if card_number != -1 and pin_code != -1:
+        main_work(card_number, pin_code)
+
+    
 
 start()
